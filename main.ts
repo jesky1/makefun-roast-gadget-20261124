@@ -23,4 +23,23 @@ const ROAST =
 
 const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
+// Competition limits ("One-Line Roast"): the entry must be a single line
+// of 1–200 characters. Enforced here so a bad edit fails loudly instead
+// of silently producing an entry the judge rejects.
+const MIN_ROAST_LENGTH = 1;
+const MAX_ROAST_LENGTH = 200;
+
+function validateRoast(roast) {
+  if (roast.length < MIN_ROAST_LENGTH || roast.length > MAX_ROAST_LENGTH) {
+    throw new Error(
+      `Roast must be ${MIN_ROAST_LENGTH}-${MAX_ROAST_LENGTH} characters, got ${roast.length}.`,
+    );
+  }
+  if (roast.includes('\n') || roast.includes('\r')) {
+    throw new Error('Roast must be a single line (no newline characters).');
+  }
+}
+
+validateRoast(ROAST);
+
 writeFileSync(join(outputDir, 'entry.txt'), ROAST, 'utf8');
